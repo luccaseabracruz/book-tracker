@@ -11,6 +11,9 @@ data class Book (
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "author") val author: String,
-    @ColumnInfo(name = "year") val year: Int,
-
+    @ColumnInfo(name = "publication_year") val publicationYear: Int?,
+    @ColumnInfo(name = "isbn") val isbn: String?,
+    @ColumnInfo(name = "loaned_to") val loanedTo: String?,
+    @ColumnInfo(name = "loan_date") val loanDate: String?,
+    @ColumnInfo(name = "return_date") val returnDate: String?
 )
