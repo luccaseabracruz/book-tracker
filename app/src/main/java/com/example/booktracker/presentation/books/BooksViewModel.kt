@@ -3,13 +3,16 @@ package com.example.booktracker.presentation.books
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.CreationExtras
+import com.example.booktracker.data.db
+import com.example.booktracker.data.repository.BookRepositoryImpl
 import com.example.booktracker.domain.model.BookDomain
 import com.example.booktracker.domain.usecase.GetAllBooksUseCase
 import com.example.booktracker.domain.usecase.InsertBookUseCase
 import kotlinx.coroutines.launch
-import java.util.Date
 
 class BooksViewModel(
     private val getAllBooksUseCase: GetAllBooksUseCase,
@@ -60,6 +63,17 @@ class BooksViewModel(
                 returnDate = returnDate
             )
         )
+    }
+
+    class Factory : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+            val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
+            val repository = BookRepositoryImpl(application.db.bookDao())
+            return BooksViewModel(
+                getAllBooksUseCase = GetAllBooksUseCase(repository),
+                insertBookUseCase = InsertBookUseCase(repository)
+            ) as T
+        }
     }
 
 }
