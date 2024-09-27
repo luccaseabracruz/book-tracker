@@ -35,15 +35,28 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    viewBinding {
+        enable = true
+    }
 }
 
 dependencies {
     //Versions
     val room_version = "2.6.1"
+    val lifecycle_version = "2.8.6"
+    val fragment_version = "1.8.3"
 
     //Room
     implementation("androidx.room:room-runtime:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
+
+    //ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+
+    //Fragment
+    implementation("androidx.fragment:fragment-ktx:$fragment_version")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
