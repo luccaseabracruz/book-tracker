@@ -49,6 +49,7 @@ dependencies {
 
     //Room
     implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
 
     //ViewModel
@@ -57,6 +58,7 @@ dependencies {
 
     //Fragment
     implementation("androidx.fragment:fragment-ktx:$fragment_version")
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
