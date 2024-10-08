@@ -2,9 +2,12 @@ package com.example.booktracker.presentation.books.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.booktracker.R
 import com.example.booktracker.databinding.ItemBookBinding
 import com.example.booktracker.domain.model.BookDomain
 
@@ -28,12 +31,39 @@ class BookAdapter : ListAdapter<BookDomain, BookAdapter.BookViewHolder>(DiffCall
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: BookDomain) {
             binding.tvBookTitle.text = item.title
+            binding.tvBookAuthor.text = item.author
+
+            if(item.publicationYear != null) {
+                binding.tvBookPublicationYear.text = "Year: ${item.publicationYear}"
+            } else {
+                binding.tvBookPublicationYear.isVisible = false
+            }
+
+            if (item.loanedTo.isNullOrEmpty()) {
+                binding.ivBookAvailability.setColorFilter(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.green
+                    ),
+                    android.graphics.PorterDuff.Mode.SRC_IN
+                )
+                binding.tvBookAvailability.text = "On Shelf"
+            } else {
+                binding.ivBookAvailability.setColorFilter(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.red
+                    ),
+                    android.graphics.PorterDuff.Mode.SRC_IN
+                )
+                binding.tvBookAvailability.text = "On Loan to ${item.loanedTo}"
+            }
         }
     }
 
 }
 
-class DiffCallback(): DiffUtil.ItemCallback<BookDomain>() {
+class DiffCallback() : DiffUtil.ItemCallback<BookDomain>() {
     override fun areItemsTheSame(oldItem: BookDomain, newItem: BookDomain): Boolean =
         oldItem == newItem
 

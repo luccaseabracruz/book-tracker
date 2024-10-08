@@ -1,6 +1,5 @@
 package com.example.booktracker.domain.repository
 
-import com.example.booktracker.data.entity.BookEntity
 import com.example.booktracker.domain.model.BookDomain
 import kotlinx.coroutines.flow.Flow
 
