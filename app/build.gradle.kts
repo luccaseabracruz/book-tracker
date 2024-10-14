@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
 
     id("kotlin-kapt")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -46,6 +47,7 @@ dependencies {
     val room_version = "2.6.1"
     val lifecycle_version = "2.8.6"
     val fragment_version = "1.8.3"
+    val navigation_version = "2.8.2"
 
     //Room
     implementation("androidx.room:room-runtime:$room_version")
@@ -58,6 +60,10 @@ dependencies {
 
     //Fragment
     implementation("androidx.fragment:fragment-ktx:$fragment_version")
+
+    //Navigation
+    implementation("androidx.navigation:navigation-fragment-ktx:$navigation_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$navigation_version")
 
 
     implementation(libs.androidx.core.ktx)

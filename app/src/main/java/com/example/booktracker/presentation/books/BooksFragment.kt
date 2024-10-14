@@ -13,6 +13,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import com.example.booktracker.R
 import com.example.booktracker.databinding.FragmentBooksBinding
 import com.example.booktracker.presentation.books.adapter.BookAdapter
 import com.example.booktracker.presentation.dialogBook.DialogBookFragment
@@ -28,7 +30,12 @@ class BooksFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val adapter by lazy {
-        BookAdapter()
+        BookAdapter().apply {
+            click = { book ->
+                val action = BooksFragmentDirections.actionBooksToDetail(book.id)
+                findNavController().navigate(action)
+            }
+        }
     }
 
     override fun onCreateView(
