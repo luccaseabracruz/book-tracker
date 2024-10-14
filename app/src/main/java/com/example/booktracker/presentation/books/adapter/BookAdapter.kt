@@ -58,6 +58,10 @@ class BookAdapter : ListAdapter<BookDomain, BookAdapter.BookViewHolder>(DiffCall
                 )
                 binding.tvBookAvailability.text = "On Loan to ${item.loanedTo}"
             }
+
+            binding.root.setOnClickListener {
+                click(item)
+            }
         }
     }
 
