@@ -69,10 +69,14 @@ class BooksFragment : Fragment() {
             val title = bundle.getString(DialogBookFragment.TIL_TITLE_VALUE)
             val author = bundle.getString(DialogBookFragment.TIL_AUTHOR_VALUE)
             var publicationYear = bundle.getString(DialogBookFragment.TIL_PUBLICATION_YEAR_VALUE)
-            val isbn = bundle.getString(DialogBookFragment.TIL_ISBN_VALUE)
+            var isbn = bundle.getString(DialogBookFragment.TIL_ISBN_VALUE)
 
             if(publicationYear != null && publicationYear.isEmpty()) {
                 publicationYear = null
+            }
+
+            if(isbn != null && isbn.isEmpty()) {
+                isbn = null
             }
 
 

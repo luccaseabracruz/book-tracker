@@ -16,7 +16,8 @@ class BookRepositoryImpl(private val dao: BookDao) : BookRepository {
     override suspend fun getAllBooks(): Flow<List<BookDomain>> = withContext(Dispatchers.IO) {
         dao.getAllBooks().map { list ->
             list.map { book ->
-                book.toDomain() }
+                book.toDomain()
+            }
         }
     }
 
@@ -26,6 +27,10 @@ class BookRepositoryImpl(private val dao: BookDao) : BookRepository {
 
     override suspend fun updateBook(book: BookDomain): Unit = withContext(Dispatchers.IO) {
         dao.updateBook(book.toEntity())
+    }
+
+    override suspend fun retrieveBookById(bookId: Int): BookDomain = withContext(Dispatchers.IO) {
+        dao.retrieveBookById(bookId).toDomain()
     }
 
 
