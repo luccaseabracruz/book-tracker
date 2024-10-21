@@ -3,181 +3,204 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="12dp">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="24dp"
-        android:text="Book Name"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-        android:textStyle="bold"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="Details"
+        app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_book_information"
+        android:id="@+id/cl_content_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="32dp"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/tv_title">
+        android:padding="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <TextView
-            android:id="@+id/tv_author_label"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Author: "
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_author"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Book Author's Name"
-            app:layout_constraintBottom_toBottomOf="@id/tv_author_label"
-            app:layout_constraintStart_toEndOf="@id/tv_author_label"
-            app:layout_constraintTop_toTopOf="@id/tv_author_label" />
-
-        <TextView
-            android:id="@+id/tv_publication_year_label"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Year: "
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_author_label" />
-
-        <TextView
-            android:id="@+id/tv_publication_year"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0000"
-            app:layout_constraintBottom_toBottomOf="@id/tv_publication_year_label"
-            app:layout_constraintStart_toEndOf="@id/tv_author_label"
-            app:layout_constraintTop_toTopOf="@id/tv_publication_year_label" />
-
-        <TextView
-            android:id="@+id/tv_isbn_label"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ISBN: "
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_publication_year_label" />
-
-        <TextView
-            android:id="@+id/tv_isbn"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0-306-40615-2"
-            app:layout_constraintBottom_toBottomOf="@id/tv_isbn_label"
-            app:layout_constraintStart_toEndOf="@id/tv_author_label"
-            app:layout_constraintTop_toTopOf="@id/tv_isbn_label" />
-
-        <ImageView
-            android:id="@+id/iv_availability"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginVertical="12dp"
-            android:contentDescription="Availability Colored Circle."
-            android:src="@drawable/baseline_circle_24"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_isbn_label"
-            tools:tint="@color/red" />
-
-        <TextView
-            android:id="@+id/tv_availability"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:text="On Loan"
+            android:layout_marginVertical="24dp"
+            android:text="Book Name Book Name Book Name Book Name Book Name"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/iv_availability"
-            app:layout_constraintStart_toEndOf="@id/iv_availability"
-            app:layout_constraintTop_toTopOf="@id/iv_availability" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_loan_information"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_book_information">
-
-        <TextView
-            android:id="@+id/tv_loaned_to_label"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Loaned to: "
-            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_loaned_to"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_book_information"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fulano de Tal"
-            app:layout_constraintBottom_toBottomOf="@id/tv_loaned_to_label"
-            app:layout_constraintStart_toEndOf="@id/tv_loaned_to_label"
-            app:layout_constraintTop_toTopOf="@id/tv_loaned_to_label" />
+            android:layout_marginVertical="32dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/tv_title">
 
-        <TextView
-            android:id="@+id/tv_loan_date_label"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tv_author_label"
+                style="@style/TextAppearance.MaterialComponents.Headline5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Author: "
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_author"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Book Author's Name"
+                app:layout_constraintBottom_toBottomOf="@id/tv_author_label"
+                app:layout_constraintStart_toEndOf="@id/tv_author_label"
+                app:layout_constraintTop_toTopOf="@id/tv_author_label" />
+
+            <TextView
+                android:id="@+id/tv_publication_year_label"
+                style="@style/TextAppearance.MaterialComponents.Headline5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Year: "
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_author_label" />
+
+            <TextView
+                android:id="@+id/tv_publication_year"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0000"
+                app:layout_constraintBottom_toBottomOf="@id/tv_publication_year_label"
+                app:layout_constraintStart_toEndOf="@id/tv_author_label"
+                app:layout_constraintTop_toTopOf="@id/tv_publication_year_label" />
+
+            <TextView
+                android:id="@+id/tv_isbn_label"
+                style="@style/TextAppearance.MaterialComponents.Headline5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ISBN: "
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_publication_year_label" />
+
+            <TextView
+                android:id="@+id/tv_isbn"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0-306-40615-2"
+                app:layout_constraintBottom_toBottomOf="@id/tv_isbn_label"
+                app:layout_constraintStart_toEndOf="@id/tv_author_label"
+                app:layout_constraintTop_toTopOf="@id/tv_isbn_label" />
+
+            <ImageView
+                android:id="@+id/iv_availability"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginVertical="12dp"
+                android:contentDescription="Availability Colored Circle."
+                android:src="@drawable/baseline_circle_24"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_isbn_label"
+                tools:tint="@color/red" />
+
+            <TextView
+                android:id="@+id/tv_availability"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="On Loan"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/iv_availability"
+                app:layout_constraintStart_toEndOf="@id/iv_availability"
+                app:layout_constraintTop_toTopOf="@id/iv_availability" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_loan_information"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date: "
-            android:textStyle="bold"
+            android:layout_marginVertical="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_loaned_to_label" />
+            app:layout_constraintTop_toBottomOf="@id/cl_book_information">
 
-        <TextView
-            android:id="@+id/tv_loan_date"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="00/00/0000"
-            app:layout_constraintStart_toEndOf="@id/tv_loaned_to_label"
-            app:layout_constraintTop_toTopOf="@id/tv_loan_date_label" />
+            <TextView
+                android:id="@+id/tv_loaned_to_label"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loaned to: "
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_return_date_label"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Return: "
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_loan_date_label" />
+            <TextView
+                android:id="@+id/tv_loaned_to"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fulano de Tal"
+                app:layout_constraintBottom_toBottomOf="@id/tv_loaned_to_label"
+                app:layout_constraintStart_toEndOf="@id/tv_loaned_to_label"
+                app:layout_constraintTop_toTopOf="@id/tv_loaned_to_label" />
 
-        <TextView
-            android:id="@+id/tv_return_date"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="00/00/0000"
-            app:layout_constraintStart_toEndOf="@id/tv_loaned_to_label"
-            app:layout_constraintTop_toTopOf="@id/tv_return_date_label" />
+            <TextView
+                android:id="@+id/tv_loan_date_label"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date: "
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_loaned_to_label" />
+
+            <TextView
+                android:id="@+id/tv_loan_date"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00/00/0000"
+                app:layout_constraintStart_toEndOf="@id/tv_loaned_to_label"
+                app:layout_constraintTop_toTopOf="@id/tv_loan_date_label" />
+
+            <TextView
+                android:id="@+id/tv_return_date_label"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Return: "
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_loan_date_label" />
+
+            <TextView
+                android:id="@+id/tv_return_date"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00/00/0000"
+                app:layout_constraintStart_toEndOf="@id/tv_loaned_to_label"
+                app:layout_constraintTop_toTopOf="@id/tv_return_date_label" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

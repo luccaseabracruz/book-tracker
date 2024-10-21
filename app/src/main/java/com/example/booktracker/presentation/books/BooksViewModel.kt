@@ -9,7 +9,6 @@ import com.example.booktracker.data.repository.BookRepositoryImpl
 import com.example.booktracker.domain.model.BookDomain
 import com.example.booktracker.domain.usecase.GetAllBooksUseCase
 import com.example.booktracker.domain.usecase.InsertBookUseCase
-import com.example.booktracker.domain.usecase.UpdateBookUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -20,8 +19,7 @@ import kotlinx.coroutines.launch
 
 class BooksViewModel(
     private val getAllBooksUseCase: GetAllBooksUseCase,
-    private val insertBookUseCase: InsertBookUseCase,
-    private val updateBookUseCase: UpdateBookUseCase
+    private val insertBookUseCase: InsertBookUseCase
 ) : ViewModel() {
 
     private val _state = MutableSharedFlow<BookState>()
@@ -70,14 +68,6 @@ class BooksViewModel(
         )
     }
 
-    fun updateBook(book: BookDomain) {
-
-    }
-
-    fun removeBook() {
-
-    }
-
     class Factory : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
             val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
@@ -85,7 +75,6 @@ class BooksViewModel(
             return BooksViewModel(
                 getAllBooksUseCase = GetAllBooksUseCase(repository),
                 insertBookUseCase = InsertBookUseCase(repository),
-                updateBookUseCase = UpdateBookUseCase(repository)
             ) as T
         }
     }

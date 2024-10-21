@@ -1,11 +1,11 @@
 package com.example.booktracker.data.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.booktracker.data.entity.BookEntity
-import com.example.booktracker.domain.model.BookDomain
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -21,4 +21,7 @@ interface BookDao {
 
     @Update
     fun updateBook(book: BookEntity)
+
+    @Delete
+    fun deleteBook(book: BookEntity)
 }
