@@ -1,8 +1,6 @@
 package com.example.booktracker.data.repository
 
 import com.example.booktracker.data.dao.BookDao
-import com.example.booktracker.data.entity.Book
-import com.example.booktracker.data.entity.BookEntity
 import com.example.booktracker.data.mapper.toDomain
 import com.example.booktracker.data.mapper.toEntity
 import com.example.booktracker.domain.model.BookDomain
@@ -31,6 +29,10 @@ class BookRepositoryImpl(private val dao: BookDao) : BookRepository {
 
     override suspend fun retrieveBookById(bookId: Int): BookDomain = withContext(Dispatchers.IO) {
         dao.retrieveBookById(bookId).toDomain()
+    }
+
+    override suspend fun deleteBook(book: BookDomain): Unit = withContext(Dispatchers.IO) {
+        dao.deleteBook(book.toEntity())
     }
 
 

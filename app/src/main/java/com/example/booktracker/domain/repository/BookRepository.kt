@@ -7,5 +7,6 @@ interface BookRepository {
     suspend fun getAllBooks(): Flow<List<BookDomain>>
     suspend fun insertBook(book: BookDomain)
     suspend fun updateBook(book: BookDomain)
-    suspend fun retrieveBookById(id: Int): BookDomain
+    suspend fun retrieveBookById(bookId: Int): BookDomain
+    suspend fun deleteBook(book: BookDomain)
 }
