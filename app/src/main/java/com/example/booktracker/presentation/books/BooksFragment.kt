@@ -7,25 +7,25 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.booktracker.R
 import com.example.booktracker.databinding.FragmentBooksBinding
+import com.example.booktracker.presentation.BooksViewModel
 import com.example.booktracker.presentation.books.adapter.BookAdapter
 import com.example.booktracker.presentation.dialogBook.DialogBookFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class BooksFragment : Fragment() {
 
-    private val viewModel: BooksViewModel by viewModels {
-        BooksViewModel.Factory()
-    }
+    private val viewModel: BooksViewModel by activityViewModels()
     private var _binding: FragmentBooksBinding? = null
     private val binding get() = _binding!!
 
@@ -106,7 +106,6 @@ class BooksFragment : Fragment() {
                         "Ups.. no books were found.",
                         Toast.LENGTH_LONG
                     ).show()
-
                 }
 
                 is BookState.Error -> {
