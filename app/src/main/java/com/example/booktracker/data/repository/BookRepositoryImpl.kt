@@ -1,5 +1,4 @@
 package com.example.booktracker.data.repository
-
 import com.example.booktracker.data.dao.BookDao
 import com.example.booktracker.data.mapper.toDomain
 import com.example.booktracker.data.mapper.toEntity
@@ -9,8 +8,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class BookRepositoryImpl(private val dao: BookDao) : BookRepository {
+class BookRepositoryImpl @Inject constructor(private val dao: BookDao) : BookRepository {
+
     override suspend fun getAllBooks(): Flow<List<BookDomain>> = withContext(Dispatchers.IO) {
         dao.getAllBooks().map { list ->
             list.map { book ->

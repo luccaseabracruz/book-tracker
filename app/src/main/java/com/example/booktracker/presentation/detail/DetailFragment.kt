@@ -14,18 +14,19 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.booktracker.R
 import com.example.booktracker.databinding.FragmentDetailBinding
+import com.example.booktracker.presentation.BooksViewModel
 import com.example.booktracker.presentation.dialogConfirmation.DialogConfirmationFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DetailFragment : Fragment() {
-    private val viewModel: DetailViewModel by viewModels {
-        DetailViewModel.Factory()
-    }
+    private val viewModel: BooksViewModel by activityViewModels()
     private val args by navArgs<DetailFragmentArgs>()
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
@@ -57,7 +58,7 @@ class DetailFragment : Fragment() {
                     R.id.i_action_delete -> {
                         val message = "Are you shure you to delete it?"
                         val onConfirm = {
-                            viewModel.book.value?.let { book ->
+                            viewModel.selectedBook.value?.let { book ->
                                 viewModel.deleteBook(book)
                                 findNavController().popBackStack()
                             }
@@ -86,7 +87,7 @@ class DetailFragment : Fragment() {
 
         viewModel.retrieveBookById(bookId)
 
-        viewModel.book.observe(viewLifecycleOwner)
+        viewModel.selectedBook.observe(viewLifecycleOwner)
         { book ->
 
             book?.let {

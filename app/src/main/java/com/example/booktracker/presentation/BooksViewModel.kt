@@ -1,14 +1,15 @@
-package com.example.booktracker.presentation.books
+package com.example.booktracker.presentation
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.booktracker.data.db
-import com.example.booktracker.data.repository.BookRepositoryImpl
 import com.example.booktracker.domain.model.BookDomain
+import com.example.booktracker.domain.usecase.DeleteBookUseCase
 import com.example.booktracker.domain.usecase.GetAllBooksUseCase
 import com.example.booktracker.domain.usecase.InsertBookUseCase
+import com.example.booktracker.domain.usecase.RetrieveBookByIdUseCase
+import com.example.booktracker.presentation.books.BookState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -16,14 +17,22 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class BooksViewModel(
+@HiltViewModel
+class BooksViewModel @Inject constructor(
     private val getAllBooksUseCase: GetAllBooksUseCase,
-    private val insertBookUseCase: InsertBookUseCase
+    private val insertBookUseCase: InsertBookUseCase,
+    private val retrieveBookByIdUseCase: RetrieveBookByIdUseCase,
+    private val deleteBookUseCase: DeleteBookUseCase
 ) : ViewModel() {
 
     private val _state = MutableSharedFlow<BookState>()
     val state: SharedFlow<BookState> = _state
+
+    val selectedBook: MutableLiveData<BookDomain> by lazy {
+        MutableLiveData<BookDomain>()
+    }
 
     init {
         getAllBooks()
@@ -37,11 +46,13 @@ class BooksViewModel(
             }.catch {
                 _state.emit(BookState.Error("Fail on loanding Books"))
             }.collect { books ->
-                if(books.isEmpty()) {
-                    _state.emit(BookState.Empty)
-                } else {
-                    _state.emit(BookState.Success(books))
-                }
+                _state.emit(
+                    if (books.isEmpty()) {
+                        BookState.Empty
+                    } else {
+                        BookState.Success(books)
+                    }
+                )
             }
     }
 
@@ -66,17 +77,17 @@ class BooksViewModel(
                 returnDate = returnDate
             )
         )
+
+        getAllBooks()
     }
 
-    class Factory : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-            val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
-            val repository = BookRepositoryImpl(application.db.bookDao())
-            return BooksViewModel(
-                getAllBooksUseCase = GetAllBooksUseCase(repository),
-                insertBookUseCase = InsertBookUseCase(repository),
-            ) as T
-        }
+    fun retrieveBookById(bookId: Int) = viewModelScope.launch {
+        selectedBook.value = retrieveBookByIdUseCase(bookId)
+    }
+
+    fun deleteBook(book: BookDomain) = viewModelScope.launch {
+        deleteBookUseCase(book)
+        getAllBooks()
     }
 
 }

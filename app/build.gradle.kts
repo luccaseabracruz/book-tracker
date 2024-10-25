@@ -4,6 +4,7 @@ plugins {
 
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -48,6 +49,7 @@ dependencies {
     val lifecycle_version = "2.8.6"
     val fragment_version = "1.8.3"
     val navigation_version = "2.8.2"
+    val hilt_version = "2.51.1"
 
     //Room
     implementation("androidx.room:room-runtime:$room_version")
@@ -65,6 +67,10 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:$navigation_version")
     implementation("androidx.navigation:navigation-ui-ktx:$navigation_version")
 
+    //Hilt
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -74,4 +80,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+kapt {
+    correctErrorTypes = true
 }
