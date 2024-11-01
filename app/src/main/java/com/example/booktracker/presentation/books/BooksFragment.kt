@@ -55,6 +55,11 @@ class BooksFragment : Fragment() {
         observeStates()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getAllBooks()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -68,23 +73,15 @@ class BooksFragment : Fragment() {
         setFragmentResultListener(DialogBookFragment.FRAGMENT_RESULT) { requestKey: String, bundle ->
             val title = bundle.getString(DialogBookFragment.TIL_TITLE_VALUE)
             val author = bundle.getString(DialogBookFragment.TIL_AUTHOR_VALUE)
-            var publicationYear = bundle.getString(DialogBookFragment.TIL_PUBLICATION_YEAR_VALUE)
-            var isbn = bundle.getString(DialogBookFragment.TIL_ISBN_VALUE)
-
-            if(publicationYear != null && publicationYear.isEmpty()) {
-                publicationYear = null
-            }
-
-            if(isbn != null && isbn.isEmpty()) {
-                isbn = null
-            }
+            val publicationYear = bundle.getString(DialogBookFragment.TIL_PUBLICATION_YEAR_VALUE)
+            val isbn = bundle.getString(DialogBookFragment.TIL_ISBN_VALUE)
 
 
             viewModel.insertBook(
                 title = title ?: "No Title",
                 author = author ?: "No Author",
-                publicationYear = publicationYear?.toInt(),
-                isbn = isbn,
+                publicationYear = if (publicationYear.isNullOrEmpty()) null else publicationYear.toInt(),
+                isbn = if (isbn.isNullOrEmpty()) null else isbn,
                 loanedTo = null,
                 loanDate = null,
                 returnDate = null

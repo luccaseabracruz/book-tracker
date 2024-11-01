@@ -15,12 +15,14 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.booktracker.R
 import com.example.booktracker.databinding.FragmentDetailBinding
 import com.example.booktracker.presentation.BooksViewModel
+import com.example.booktracker.presentation.dialogBook.DialogBookFragment
 import com.example.booktracker.presentation.dialogConfirmation.DialogConfirmationFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,9 +45,10 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupListeners()
+
         val toolbar = binding.toolbar
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
-
 
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
@@ -73,6 +76,8 @@ class DetailFragment : Fragment() {
                     }
 
                     R.id.i_action_edit -> {
+                        showEditDialog()
+
                         true
                     }
 
@@ -111,9 +116,38 @@ class DetailFragment : Fragment() {
         }
     }
 
+    fun setupListeners() {
+        setFragmentResultListener(DialogBookFragment.FRAGMENT_RESULT) { requestKey, bundle ->
+            val title = bundle.getString(DialogBookFragment.TIL_TITLE_VALUE)
+            val author = bundle.getString(DialogBookFragment.TIL_AUTHOR_VALUE)
+            val publicationYear = bundle.getString(DialogBookFragment.TIL_PUBLICATION_YEAR_VALUE)
+            val isbn = bundle.getString(DialogBookFragment.TIL_ISBN_VALUE)
+
+            viewModel.selectedBook.value?.let { book ->
+                val updatedBook = book.copy(
+                    title = title ?: book.title,
+                    author = author ?: book.author,
+                    publicationYear = if (publicationYear.isNullOrEmpty()) null else publicationYear.toInt(),
+                    isbn = if (isbn.isNullOrEmpty()) null else isbn
+
+                )
+
+                viewModel.updateBook(updatedBook)
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun showEditDialog() {
+        DialogBookFragment.show(
+            dialogTitle = "Edit Book",
+            fragmentManager = parentFragmentManager,
+            book = viewModel.selectedBook.value
+        )
     }
 
 }
@@ -130,3 +164,4 @@ private fun updateTextView(textView: TextView, label: TextView, value: Any?) {
         label.setTextColor(label.context.getColor(R.color.light_grey_invisible))
     }
 }
+

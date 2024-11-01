@@ -8,6 +8,7 @@ import com.example.booktracker.domain.usecase.DeleteBookUseCase
 import com.example.booktracker.domain.usecase.GetAllBooksUseCase
 import com.example.booktracker.domain.usecase.InsertBookUseCase
 import com.example.booktracker.domain.usecase.RetrieveBookByIdUseCase
+import com.example.booktracker.domain.usecase.UpdateBookUseCase
 import com.example.booktracker.presentation.books.BookState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +25,7 @@ class BooksViewModel @Inject constructor(
     private val getAllBooksUseCase: GetAllBooksUseCase,
     private val insertBookUseCase: InsertBookUseCase,
     private val retrieveBookByIdUseCase: RetrieveBookByIdUseCase,
+    private val updateBookUseCase: UpdateBookUseCase,
     private val deleteBookUseCase: DeleteBookUseCase
 ) : ViewModel() {
 
@@ -38,7 +40,7 @@ class BooksViewModel @Inject constructor(
         getAllBooks()
     }
 
-    private fun getAllBooks() = viewModelScope.launch {
+    fun getAllBooks() = viewModelScope.launch {
         getAllBooksUseCase()
             .flowOn(Dispatchers.IO)
             .onStart {
@@ -85,9 +87,13 @@ class BooksViewModel @Inject constructor(
         selectedBook.value = retrieveBookByIdUseCase(bookId)
     }
 
+    fun updateBook(book: BookDomain) = viewModelScope.launch {
+        updateBookUseCase(book)
+        selectedBook.value = book
+    }
+
     fun deleteBook(book: BookDomain) = viewModelScope.launch {
         deleteBookUseCase(book)
-        getAllBooks()
     }
 
 }

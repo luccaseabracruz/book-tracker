@@ -8,11 +8,15 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.setFragmentResult
 import com.example.booktracker.databinding.FragmentDialogBookBinding
+import com.example.booktracker.domain.model.BookDomain
 
 class DialogBookFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
         lateinit var binding: FragmentDialogBookBinding
+
+        @Suppress("DEPRECATION")
+        val book = arguments?.getParcelable<BookDomain>(BOOK_ARG)
 
         val titleText = arguments?.getString(DIALOG_TITLE_TEXT)
             ?: throw IllegalArgumentException("Ups... title is required")
@@ -22,6 +26,13 @@ class DialogBookFragment : DialogFragment() {
                 requireActivity().layoutInflater
             ).apply {
                 tvTitle.text = titleText
+
+                book?.let { book ->
+                    tilTitle.editText?.setText(book.title)
+                    tilAuthor.editText?.setText(book.author)
+                    tilPublicationYear.editText?.setText(book.publicationYear.toString())
+                    tilIsbn.editText?.setText(book.isbn)
+                }
             }
 
             AlertDialog.Builder(it).setView(binding.root).setPositiveButton("Confirm") { _, _ ->
@@ -42,7 +53,7 @@ class DialogBookFragment : DialogFragment() {
 
     companion object {
         const val DIALOG_TITLE_TEXT = "DIALOG_TITLE_TEXT"
-
+        const val BOOK_ARG = "BOOK_ARG"
         const val FRAGMENT_RESULT = "FRAGMENT_RESULT"
         const val TIL_TITLE_VALUE = "ETL_TITLE_VALUE"
         const val TIL_AUTHOR_VALUE = "ETL_AUTHOR_VALUE"
@@ -52,11 +63,13 @@ class DialogBookFragment : DialogFragment() {
         fun show(
             dialogTitle: String,
             fragmentManager: FragmentManager,
-            tag: String = DialogBookFragment::class.simpleName.toString()
+            tag: String = DialogBookFragment::class.simpleName.toString(),
+            book: BookDomain? = null
         ) {
             DialogBookFragment().apply {
                 arguments = bundleOf(
                     DIALOG_TITLE_TEXT to dialogTitle,
+                    BOOK_ARG to book
                 )
             }.show(fragmentManager, tag)
 
