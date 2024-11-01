@@ -1,7 +1,11 @@
 package com.example.booktracker.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 typealias BookDomain = Book
 
+@Parcelize
 data class Book (
     val id: Int,
     val title: String,
@@ -11,4 +15,4 @@ data class Book (
     val loanedTo: String?,
     val loanDate: String?,
     val returnDate: String?,
-)
+): Parcelable
