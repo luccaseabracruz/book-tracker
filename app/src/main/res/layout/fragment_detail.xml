@@ -129,6 +129,22 @@
                 app:layout_constraintStart_toEndOf="@id/iv_availability"
                 app:layout_constraintTop_toTopOf="@id/iv_availability" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_register_loan"
+                style="@style/Widget.Material3.Button.IconButton.Outlined"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:text="Register a loan"
+                android:padding="16dp"
+                android:layout_marginTop="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_availability"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -156,7 +172,7 @@
                 style="@style/TextAppearance.MaterialComponents.Headline6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Fulano de Tal"
+                android:text="Person who has the book"
                 app:layout_constraintBottom_toBottomOf="@id/tv_loaned_to_label"
                 app:layout_constraintStart_toEndOf="@id/tv_loaned_to_label"
                 app:layout_constraintTop_toTopOf="@id/tv_loaned_to_label" />
@@ -198,6 +214,20 @@
                 android:text="00/00/0000"
                 app:layout_constraintStart_toEndOf="@id/tv_loaned_to_label"
                 app:layout_constraintTop_toTopOf="@id/tv_return_date_label" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_return_loan"
+                style="@style/Widget.Material3.Button.IconButton.Outlined"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:text="Register book return"
+                android:padding="16dp"
+                android:layout_marginTop="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_return_date"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

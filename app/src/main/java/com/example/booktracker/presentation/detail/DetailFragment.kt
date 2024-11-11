@@ -1,7 +1,6 @@
 package com.example.booktracker.presentation.detail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -24,6 +23,7 @@ import com.example.booktracker.databinding.FragmentDetailBinding
 import com.example.booktracker.presentation.BooksViewModel
 import com.example.booktracker.presentation.dialogBook.DialogBookFragment
 import com.example.booktracker.presentation.dialogConfirmation.DialogConfirmationFragment
+import com.example.booktracker.presentation.dialogLoan.DialogLoanFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -108,16 +108,72 @@ class DetailFragment : Fragment() {
                 updateTextView(binding.tvIsbn, binding.tvIsbnLabel, book.isbn)
                 if (book.loanedTo.isNullOrEmpty()) {
                     binding.tvAvailability.text = "On Shelf"
+                    binding.clLoanInformation.isVisible = false
+                    binding.btnRegisterLoan.isVisible = true
+                } else {
+                    binding.tvAvailability.text = "On Loan"
+                    binding.clLoanInformation.isVisible = true
+                    binding.btnRegisterLoan.isVisible = false
 
+                    updateTextView(
+                        binding.tvLoanedTo,
+                        binding.tvLoanedToLabel,
+                        book.loanedTo
+                    )
+                    updateTextView(
+                        binding.tvLoanDate,
+                        binding.tvLoanDateLabel,
+                        book.loanDate
+                    )
+                    updateTextView(
+                        binding.tvReturnDate,
+                        binding.tvReturnDateLabel,
+                        book.returnDate
+                    )
                 }
+
             } ?: run {
                 binding.tvTitle.text = "Book not found."
             }
         }
     }
 
-    fun setupListeners() {
-        setFragmentResultListener(DialogBookFragment.FRAGMENT_RESULT) { requestKey, bundle ->
+    private fun setupListeners() {
+
+
+        binding.btnRegisterLoan.setOnClickListener {
+            showRegisterLoanDialog()
+        }
+
+        binding.btnReturnLoan.setOnClickListener {
+            viewModel.selectedBook.value?.let { book ->
+                val updatedBook = book.copy(
+                    loanedTo = null,
+                    loanDate = null,
+                    returnDate = null
+                )
+
+                viewModel.updateBook(updatedBook)
+            }
+        }
+
+        setFragmentResultListener(DialogLoanFragment.LOAN_FRAGMENT_RESULT) { requestKey, bundle ->
+            val loanedTo = bundle.getString(DialogLoanFragment.TIL_LOANED_TO)
+            val loanDate = bundle.getString(DialogLoanFragment.LOAN_DATE)
+            val returnDate = bundle.getString(DialogLoanFragment.TIL_RETURN_DATE)
+
+            viewModel.selectedBook.value?.let { book ->
+                val updatedBook = book.copy(
+                    loanedTo = loanedTo,
+                    loanDate = loanDate,
+                    returnDate = returnDate
+                )
+
+                viewModel.updateBook(updatedBook)
+            }
+        }
+
+        setFragmentResultListener(DialogBookFragment.BOOK_FRAGMENT_RESULT) { requestKey, bundle ->
             val title = bundle.getString(DialogBookFragment.TIL_TITLE_VALUE)
             val author = bundle.getString(DialogBookFragment.TIL_AUTHOR_VALUE)
             val publicationYear = bundle.getString(DialogBookFragment.TIL_PUBLICATION_YEAR_VALUE)
@@ -135,6 +191,7 @@ class DetailFragment : Fragment() {
                 viewModel.updateBook(updatedBook)
             }
         }
+
     }
 
     override fun onDestroyView() {
@@ -150,6 +207,14 @@ class DetailFragment : Fragment() {
         )
     }
 
+    private fun showRegisterLoanDialog() {
+        DialogLoanFragment.show(
+            dialogTitle = "Loan Register",
+            fragmentManager = parentFragmentManager,
+            book = viewModel.selectedBook.value
+        )
+    }
+
 }
 
 private fun updateTextView(textView: TextView, label: TextView, value: Any?) {
@@ -159,7 +224,6 @@ private fun updateTextView(textView: TextView, label: TextView, value: Any?) {
         label.setTextColor(label.context.getColor(R.color.black))
 
     } ?: run {
-        Log.d("DetailFragment", "${label.text}  $value")
         textView.isVisible = false
         label.setTextColor(label.context.getColor(R.color.light_grey_invisible))
     }

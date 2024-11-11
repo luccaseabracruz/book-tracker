@@ -70,7 +70,7 @@ class BooksFragment : Fragment() {
             showDialog()
         }
 
-        setFragmentResultListener(DialogBookFragment.FRAGMENT_RESULT) { requestKey: String, bundle ->
+        setFragmentResultListener(DialogBookFragment.BOOK_FRAGMENT_RESULT) { requestKey: String, bundle ->
             val title = bundle.getString(DialogBookFragment.TIL_TITLE_VALUE)
             val author = bundle.getString(DialogBookFragment.TIL_AUTHOR_VALUE)
             val publicationYear = bundle.getString(DialogBookFragment.TIL_PUBLICATION_YEAR_VALUE)

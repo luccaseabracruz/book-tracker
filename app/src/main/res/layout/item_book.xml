@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="240dp"
+    android:layout_height="268dp"
     android:layout_margin="16dp"
     android:clickable="true"
     android:focusable="true"
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/mb_more_details"
             app:layout_constraintStart_toEndOf="@id/iv_book_availability"
             app:layout_constraintTop_toBottomOf="@id/tv_book_publication_year"
             tools:text="On shelf!" />

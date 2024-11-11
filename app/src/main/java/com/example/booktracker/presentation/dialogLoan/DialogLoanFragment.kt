@@ -1,80 +1,79 @@
-package com.example.booktracker.presentation.dialogBook
+package com.example.booktracker.presentation.dialogLoan
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.icu.util.Calendar
 import android.os.Bundle
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.setFragmentResult
-import com.example.booktracker.databinding.FragmentDialogBookBinding
+import com.example.booktracker.databinding.FragmentDialogLoanBinding
 import com.example.booktracker.domain.model.BookDomain
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-class DialogBookFragment : DialogFragment() {
+class DialogLoanFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        lateinit var binding: FragmentDialogLoanBinding
 
-        lateinit var binding: FragmentDialogBookBinding
-
-        @Suppress("DEPRECATION")
         val book = arguments?.getParcelable<BookDomain>(BOOK_ARG)
-
         val titleText = arguments?.getString(DIALOG_TITLE_TEXT)
             ?: throw IllegalArgumentException("Ups... title is required")
 
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val formattedDate = dateFormat.format(calendar.time)
+
         return activity.let {
-            binding = FragmentDialogBookBinding.inflate(
+            binding = FragmentDialogLoanBinding.inflate(
                 requireActivity().layoutInflater
             ).apply {
                 tvTitle.text = titleText
 
-                book?.let { book ->
-                    tilTitle.editText?.setText(book.title)
-                    tilAuthor.editText?.setText(book.author)
-                    if (book.publicationYear != null) {
-                        tilPublicationYear.editText?.setText(book.publicationYear.toString())
-                    }
-                    tilIsbn.editText?.setText(book.isbn)
+                book?.let {
+                    tilLoanedTo.editText?.setText(book.loanedTo)
+                    tilReturnDate.editText?.setText(book.returnDate)
                 }
             }
 
             AlertDialog.Builder(it).setView(binding.root).setPositiveButton("Confirm") { _, _ ->
                 setFragmentResult(
-                    BOOK_FRAGMENT_RESULT,
+                    LOAN_FRAGMENT_RESULT,
                     bundleOf(
-                        TIL_TITLE_VALUE to binding.tilTitle.editText?.text.toString(),
-                        TIL_AUTHOR_VALUE to binding.tilAuthor.editText?.text.toString(),
-                        TIL_PUBLICATION_YEAR_VALUE to binding.tilPublicationYear.editText?.text.toString(),
-                        TIL_ISBN_VALUE to binding.tilIsbn.editText?.text.toString()
+                        TIL_LOANED_TO to binding.tilLoanedTo.editText?.text.toString(),
+                        TIL_RETURN_DATE to binding.tilReturnDate.editText?.text.toString(),
+                        LOAN_DATE to formattedDate
                     )
                 )
             }.setNegativeButton("Cancel") { _, _ ->
                 dismiss()
             }.create()
         } ?: throw IllegalStateException("The activity can not be null.")
+
     }
 
     companion object {
         const val DIALOG_TITLE_TEXT = "DIALOG_TITLE_TEXT"
         const val BOOK_ARG = "BOOK_ARG"
-        const val BOOK_FRAGMENT_RESULT = "BOOK_FRAGMENT_RESULT"
-        const val TIL_TITLE_VALUE = "TIL_TITLE_VALUE"
-        const val TIL_AUTHOR_VALUE = "TIL_AUTHOR_VALUE"
-        const val TIL_PUBLICATION_YEAR_VALUE = "TIL_PUBLICATION_YEAR_VALUE"
-        const val TIL_ISBN_VALUE = "TIL_ISBN_VALUE"
+        const val LOAN_DATE = "TIL_LOAN_DATE"
+        const val LOAN_FRAGMENT_RESULT = "LOAN_FRAGMENT_RESULT"
+        const val TIL_LOANED_TO = "TIL_LOANED_TO"
+        const val TIL_RETURN_DATE = "TIL_RETURN_DATE"
 
         fun show(
             dialogTitle: String,
             fragmentManager: FragmentManager,
-            tag: String = DialogBookFragment::class.simpleName.toString(),
-            book: BookDomain? = null
+            tag: String = DialogLoanFragment::class.simpleName.toString(),
+            book: BookDomain?
         ) {
-            DialogBookFragment().apply {
+            DialogLoanFragment().apply {
                 arguments = bundleOf(
                     DIALOG_TITLE_TEXT to dialogTitle,
                     BOOK_ARG to book
                 )
             }.show(fragmentManager, tag)
-
         }
+
     }
 }
