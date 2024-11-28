@@ -40,6 +40,11 @@ class BookAdapter : ListAdapter<BookDomain, BookAdapter.BookViewHolder>(DiffCall
             }
 
             if (item.loanedTo.isNullOrEmpty()) {
+                binding.cvMaterialCardView.strokeColor = ContextCompat.getColor(
+                    binding.root.context,
+                    R.color.green
+                )
+
                 binding.ivBookAvailability.setColorFilter(
                     ContextCompat.getColor(
                         binding.root.context,
@@ -49,6 +54,11 @@ class BookAdapter : ListAdapter<BookDomain, BookAdapter.BookViewHolder>(DiffCall
                 )
                 binding.tvBookAvailability.text = "On Shelf"
             } else {
+                binding.cvMaterialCardView.strokeColor = ContextCompat.getColor(
+                    binding.root.context,
+                    R.color.red
+                )
+
                 binding.ivBookAvailability.setColorFilter(
                     ContextCompat.getColor(
                         binding.root.context,
