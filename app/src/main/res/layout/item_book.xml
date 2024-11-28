@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    android:id="@+id/cv_material_card_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,8 +11,7 @@
     android:focusable="true"
     app:cardElevation="4dp"
     app:cardCornerRadius="12dp"
-    app:strokeColor="@color/green"
-    app:strokeWidth="0.8dp">
+    app:strokeWidth="0.4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_content"
