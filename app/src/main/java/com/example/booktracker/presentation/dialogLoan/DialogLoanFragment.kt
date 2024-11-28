@@ -5,52 +5,109 @@ import android.app.Dialog
 import android.icu.util.Calendar
 import android.os.Bundle
 import androidx.core.os.bundleOf
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.booktracker.databinding.FragmentDialogLoanBinding
 import com.example.booktracker.domain.model.BookDomain
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+@AndroidEntryPoint
 class DialogLoanFragment : DialogFragment() {
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        lateinit var binding: FragmentDialogLoanBinding
+    private val viewModel: DialogLoanViewModel by viewModels()
+    lateinit var binding: FragmentDialogLoanBinding
 
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+
+        @Suppress("DEPRECATION")
         val book = arguments?.getParcelable<BookDomain>(BOOK_ARG)
         val titleText = arguments?.getString(DIALOG_TITLE_TEXT)
             ?: throw IllegalArgumentException("Ups... title is required")
 
-        val calendar = Calendar.getInstance()
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val formattedDate = dateFormat.format(calendar.time)
 
-        return activity.let {
-            binding = FragmentDialogLoanBinding.inflate(
-                requireActivity().layoutInflater
-            ).apply {
-                tvTitle.text = titleText
+        binding = FragmentDialogLoanBinding.inflate(
+            requireActivity().layoutInflater
+        ).apply {
+            tvTitle.text = titleText
 
-                book?.let {
-                    tilLoanedTo.editText?.setText(book.loanedTo)
-                    tilReturnDate.editText?.setText(book.returnDate)
-                }
+            book?.let {
+                tilLoanedTo.editText?.setText(book.loanedTo)
+                tilReturnDate.editText?.setText(book.returnDate)
             }
 
-            AlertDialog.Builder(it).setView(binding.root).setPositiveButton("Confirm") { _, _ ->
-                setFragmentResult(
-                    LOAN_FRAGMENT_RESULT,
-                    bundleOf(
-                        TIL_LOANED_TO to binding.tilLoanedTo.editText?.text.toString(),
-                        TIL_RETURN_DATE to binding.tilReturnDate.editText?.text.toString(),
-                        LOAN_DATE to formattedDate
-                    )
-                )
-            }.setNegativeButton("Cancel") { _, _ ->
+            tilLoanedTo.editText?.addTextChangedListener { text ->
+                viewModel.onEvent(LoanFormEvent.LoanedToChanged(text.toString()))
+            }
+            tilReturnDate.editText?.addTextChangedListener { text ->
+                viewModel.onEvent(LoanFormEvent.ReturnDateChanged(text.toString()))
+            }
+        }
+
+        val dialog = AlertDialog.Builder(requireContext()).setView(binding.root)
+            .setPositiveButton("Confirm", null)
+            .setNegativeButton("Cancel") { _, _ ->
                 dismiss()
             }.create()
-        } ?: throw IllegalStateException("The activity can not be null.")
 
+        dialog.setOnShowListener {
+            val confirmationButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            confirmationButton.setOnClickListener {
+                viewModel.onEvent(LoanFormEvent.submit)
+            }
+        }
+
+
+
+        return dialog
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        lifecycleScope.launch {
+            viewModel.state.collect() { state ->
+                displayErrors(state)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.validationEvents.collect { event ->
+                when (event) {
+                    is DialogLoanViewModel.ValidationEvent.Success -> {
+                        val calendar = Calendar.getInstance()
+                        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                        val formattedDate = dateFormat.format(calendar.time)
+                        
+                        setFragmentResult(
+                            LOAN_FRAGMENT_RESULT,
+                            bundleOf(
+                                TIL_LOANED_TO to binding.tilLoanedTo.editText?.text.toString(),
+                                TIL_RETURN_DATE to binding.tilReturnDate.editText?.text.toString(),
+                                LOAN_DATE to formattedDate
+                            )
+                        )
+                        dismiss()
+                    }
+                }
+
+            }
+        }
+
+
+    }
+
+    private fun displayErrors(state: LoanDialogFormState) {
+        binding.apply {
+            tilLoanedTo.error = state.loanedToError
+            tilReturnDate.error = state.returnDateError
+        }
     }
 
     companion object {

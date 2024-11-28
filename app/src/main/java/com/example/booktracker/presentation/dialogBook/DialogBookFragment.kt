@@ -4,16 +4,24 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.core.os.bundleOf
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.booktracker.databinding.FragmentDialogBookBinding
 import com.example.booktracker.domain.model.BookDomain
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class DialogBookFragment : DialogFragment() {
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        lateinit var binding: FragmentDialogBookBinding
+    private val viewModel: DialogBookViewModel by viewModels()
+    lateinit var binding: FragmentDialogBookBinding
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
         @Suppress("DEPRECATION")
         val book = arguments?.getParcelable<BookDomain>(BOOK_ARG)
@@ -21,36 +29,91 @@ class DialogBookFragment : DialogFragment() {
         val titleText = arguments?.getString(DIALOG_TITLE_TEXT)
             ?: throw IllegalArgumentException("Ups... title is required")
 
-        return activity.let {
-            binding = FragmentDialogBookBinding.inflate(
-                requireActivity().layoutInflater
-            ).apply {
-                tvTitle.text = titleText
+        binding = FragmentDialogBookBinding.inflate(
+            requireActivity().layoutInflater
+        ).apply {
+            tvTitle.text = titleText
 
-                book?.let { book ->
-                    tilTitle.editText?.setText(book.title)
-                    tilAuthor.editText?.setText(book.author)
-                    if (book.publicationYear != null) {
-                        tilPublicationYear.editText?.setText(book.publicationYear.toString())
-                    }
-                    tilIsbn.editText?.setText(book.isbn)
+            book?.let { book ->
+                tilTitle.editText?.setText(book.title)
+                tilAuthor.editText?.setText(book.author)
+                if (book.publicationYear != null) {
+                    tilPublicationYear.editText?.setText(book.publicationYear.toString())
                 }
+                tilIsbn.editText?.setText(book.isbn)
+
+                viewModel.loadBook(book)
             }
 
-            AlertDialog.Builder(it).setView(binding.root).setPositiveButton("Confirm") { _, _ ->
-                setFragmentResult(
-                    BOOK_FRAGMENT_RESULT,
-                    bundleOf(
-                        TIL_TITLE_VALUE to binding.tilTitle.editText?.text.toString(),
-                        TIL_AUTHOR_VALUE to binding.tilAuthor.editText?.text.toString(),
-                        TIL_PUBLICATION_YEAR_VALUE to binding.tilPublicationYear.editText?.text.toString(),
-                        TIL_ISBN_VALUE to binding.tilIsbn.editText?.text.toString()
-                    )
-                )
-            }.setNegativeButton("Cancel") { _, _ ->
+            tilTitle.editText?.addTextChangedListener { text ->
+                viewModel.onEvent(BookFormEvent.TitleChanged(text.toString()))
+            }
+            tilAuthor.editText?.addTextChangedListener { text ->
+                viewModel.onEvent(BookFormEvent.AuthorChanged(text.toString()))
+            }
+            tilPublicationYear.editText?.addTextChangedListener { text ->
+                viewModel.onEvent(BookFormEvent.PublicationYearChanged(text.toString()))
+            }
+            tilIsbn.editText?.addTextChangedListener { text ->
+                viewModel.onEvent(BookFormEvent.IsbnChanged(text.toString()))
+            }
+        }
+
+        val dialog = AlertDialog.Builder(requireContext()).setView(binding.root)
+            .setPositiveButton("Confirm", null)
+            .setNegativeButton("Cancel") { _, _ ->
                 dismiss()
             }.create()
-        } ?: throw IllegalStateException("The activity can not be null.")
+
+        dialog.setOnShowListener {
+            val confirmationButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            confirmationButton.setOnClickListener {
+                viewModel.onEvent(BookFormEvent.submit)
+            }
+        }
+
+        return dialog
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        lifecycleScope.launch {
+            viewModel.state.collect() { state ->
+                displayErrors(state)
+            }
+
+        }
+
+        lifecycleScope.launch {
+            viewModel.validationEvents.collect { event ->
+                when (event) {
+                    is DialogBookViewModel.ValidationEvent.Success -> {
+
+                        setFragmentResult(
+                            BOOK_FRAGMENT_RESULT,
+                            bundleOf(
+                                TIL_TITLE_VALUE to binding.tilTitle.editText?.text.toString(),
+                                TIL_AUTHOR_VALUE to binding.tilAuthor.editText?.text.toString(),
+                                TIL_PUBLICATION_YEAR_VALUE to binding.tilPublicationYear.editText?.text.toString(),
+                                TIL_ISBN_VALUE to binding.tilIsbn.editText?.text.toString()
+                            )
+                        )
+                        dismiss()
+                    }
+                }
+
+            }
+        }
+    }
+
+    private fun displayErrors(state: BookDialogFormState) {
+        binding.apply {
+            tilTitle.error = state.titleError
+            tilAuthor.error = state.authorError
+            tilPublicationYear.error = state.publicationYearError
+            tilIsbn.error = state.isbnError
+        }
     }
 
     companion object {
