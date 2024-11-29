@@ -4,12 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.booktracker.R
 import com.example.booktracker.databinding.ItemBookBinding
 import com.example.booktracker.domain.model.BookDomain
+import com.example.booktracker.presentation.books.BooksFragmentDirections
 
 class BookAdapter : ListAdapter<BookDomain, BookAdapter.BookViewHolder>(DiffCallback()) {
 
@@ -72,6 +74,11 @@ class BookAdapter : ListAdapter<BookDomain, BookAdapter.BookViewHolder>(DiffCall
             binding.root.setOnClickListener {
                 click(item)
             }
+
+            binding.mbMoreDetails.setOnClickListener {
+                click(item)
+            }
+
         }
     }
 
