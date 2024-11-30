@@ -25,6 +25,7 @@ import com.example.booktracker.presentation.BooksViewModel
 import com.example.booktracker.presentation.dialogBook.DialogBookFragment
 import com.example.booktracker.presentation.dialogConfirmation.DialogConfirmationFragment
 import com.example.booktracker.presentation.dialogLoan.DialogLoanFragment
+import com.example.booktracker.presentation.showSnackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -65,6 +66,7 @@ class DetailFragment : Fragment() {
                             viewModel.selectedBook.value?.let { book ->
                                 viewModel.deleteBook(book)
                                 findNavController().popBackStack()
+                                requireView().showSnackbar("The book has been removed!")
                             }
                         }
                         DialogConfirmationFragment.showDialog(
@@ -171,6 +173,7 @@ class DetailFragment : Fragment() {
                 )
 
                 viewModel.updateBook(updatedBook)
+                requireView().showSnackbar("Book return recorded successfully!")
             }
         }
 
@@ -187,6 +190,7 @@ class DetailFragment : Fragment() {
                 )
 
                 viewModel.updateBook(updatedBook)
+                requireView().showSnackbar("Loan registered successfully!")
             }
         }
 
@@ -206,6 +210,7 @@ class DetailFragment : Fragment() {
                 )
 
                 viewModel.updateBook(updatedBook)
+                requireView().showSnackbar("Book updated successfully!")
             }
         }
 
