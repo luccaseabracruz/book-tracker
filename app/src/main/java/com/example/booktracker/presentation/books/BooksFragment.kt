@@ -16,6 +16,7 @@ import com.example.booktracker.databinding.FragmentBooksBinding
 import com.example.booktracker.presentation.BooksViewModel
 import com.example.booktracker.presentation.books.adapter.TabAdapter
 import com.example.booktracker.presentation.dialogBook.DialogBookFragment
+import com.example.booktracker.presentation.showSnackbar
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.Flow
@@ -98,6 +99,8 @@ class BooksFragment : Fragment() {
                 loanDate = null,
                 returnDate = null
             )
+
+            requireView().showSnackbar("Book added successfully!")
         }
     }
 
